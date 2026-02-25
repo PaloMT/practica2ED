@@ -15,15 +15,19 @@ public class UtilizacionPila {
      */
     public boolean comprobarLinea(final ListaEtiquetas lista, final String texto) {
         Pila pila=new Pila ();
-        String [] dato= texto.split("");
+        String [] dato= texto.replace("\n", " ").split(" ");
         for(int i=0; i<dato.length; i++){
             if(lista.esApertura(dato[i])){
                 pila.apilar(dato[i]);
             }
-            if(!pila.vacia() && lista.esCierre(dato[i])){
-                String datos= pila.desapilar();
-                if(!lista.emparejados(dato[i],datos)){
-                    pila.apilar(datos);
+            else if(lista.esCierre(dato[i])){
+                if(!pila.vacia()){
+                    String apertura = pila.desapilar();
+                    if(!lista.emparejados(apertura, dato[i])){
+                        pila.apilar(apertura);
+                    }
+                } else {
+                    pila.apilar(dato[i]);
                 }
             }
         }
