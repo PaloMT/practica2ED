@@ -14,33 +14,25 @@ public class UtilizacionPila {
      * @return verdadero si las etiquetas estan balanceadas, falso en caso contrario
      */
     public boolean comprobarLinea(final ListaEtiquetas lista, final String texto) {
-        Pila pilaEtiquetas = new Pila();
-        String[] datos = texto.split(" ");
-
-        for (int i = 0; i < datos.length; i++) {
-            String etiquetaActual = datos[i];
-
-            if (lista.esApertura(etiquetaActual)) {
-                pilaEtiquetas.apilar(etiquetaActual);
+        Pila pila=new Pila ();
+        String [] dato= texto.split("");
+        for(int i=0; i<dato.length; i++){
+            if(lista.esApertura(dato[i])){
+                pila.apilar(dato[i]);
             }
-            else if (lista.esCierre(etiquetaActual)) {
-                if (pilaEtiquetas.vacia()) {
-                    return false;
-                }
-
-                String cima = pilaEtiquetas.desapilar();
-
-                if (!lista.emparejados(cima, etiquetaActual)) {
-                    return false;
+            if(!pila.vacia() && lista.esCierre(dato[i])){
+                String datos= pila.desapilar();
+                if(!lista.emparejados(dato[i],datos)){
+                    pila.apilar(datos);
                 }
             }
         }
-        if (!pilaEtiquetas.vacia()) {
+
+        if (!pila.vacia()) {
             System.out.println("En la pila quedan elementos:");
-            mostrarInverso(pilaEtiquetas);
-            return false;
+            mostrarInverso(pila);
         }
-        return true;
+        return pila.vacia();
     }
 
     /**
@@ -49,7 +41,7 @@ public class UtilizacionPila {
      */
     public void mostrarInverso(Pila pila) {
         String elemento;
-        while (!pila.vacia()){
+        if (!pila.vacia()){
             elemento = pila.desapilar();
             mostrarInverso(pila);
             System.out.println(elemento);
