@@ -15,9 +15,12 @@ public class UtilizacionCola {
      */
     public Cola leerTexto (ListaEtiquetas lista, String texto) {
         Cola resultado = new Cola();
-
-
-
+        String [] dato= texto.replace("\n", " ").split(" ");
+        for(int i=0; i<dato.length; i++){
+            if (lista.esEtiqueta(dato[i])){
+                resultado.encolar(dato[i]);
+            }
+        }
         return resultado;
     }
 
@@ -31,8 +34,33 @@ public class UtilizacionCola {
      */
     public boolean comprobarHtml (Cola cola, ListaEtiquetas lista) {
         boolean resultado = true;
+        Pila pilaAux = new Pila();
+        for (int i = 0; i < cola.getNumElementos(); i++) {
+            String etiqueta = cola.desencolar();
+            if (resultado) {
+                if (lista.esApertura(etiqueta)) {
+                    pilaAux.apilar(etiqueta);
+                } else if (lista.esCierre(etiqueta)) {
+                    if (!pilaAux.vacia()) {
+                        String apertura = pilaAux.desapilar();
+                        if (!lista.emparejados(apertura, etiqueta)) {
+                            pilaAux.apilar(apertura);
+                            resultado = false;
+                        }
+                    } else {
+                        pilaAux.apilar(etiqueta);
+                        resultado = false;
+                    }
+                }
+            }
+            cola.encolar(etiqueta);
+        }
 
-
+        if (!pilaAux.vacia()) {
+            System.out.println("En la pila quedan elementos:");
+            pilaAux.mostrar();
+            resultado = false;
+        }
 
         return resultado;
     }
